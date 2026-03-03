@@ -2,35 +2,39 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
+import { TeamsModule } from './teams/teams.module';
+import { LeavesModule } from './leaves/leaves.module';
+import { ReportsModule } from './reports/reports.module';
+import { User } from './entities/user.entity';
+import { Team } from './entities/team.entity';
+import { LeaveRequest } from './entities/leave-request.entity';
 
 @Module({
   imports: [
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     ConfigModule.forRoot({
-      isGlobal: true, // Makes env vars available everywhere
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        url: configService.get<string>('DATABASE_URL'),
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT') || 5432,
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true, // Set to true for development
-        logging: true,
-        ssl: configService.get<string>('DATABASE_URL') ? { rejectUnauthorized: false } : false,
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_DATABASE'),
+        entities: [User, Team, LeaveRequest],
+        synchronize: configService.get('NODE_ENV') === 'development',
+        logging: configService.get('NODE_ENV') === 'development',
       }),
+      inject: [ConfigService],
     }),
     AuthModule,
-    TasksModule,
     UsersModule,
+    TeamsModule,
+    LeavesModule,
+    ReportsModule,
   ],
 })
 export class AppModule {}

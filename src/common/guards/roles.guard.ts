@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserRole } from '../../entities/user.entity';
+import { UserRole } from '../../users/user.entity';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 
 @Injectable()
