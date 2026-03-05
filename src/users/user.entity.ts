@@ -33,6 +33,9 @@ export class User {
   @Column()
   name: string;
 
+  @Column()
+  password: string;
+
   @Column({
     type: 'enum',
     enum: UserRole,
