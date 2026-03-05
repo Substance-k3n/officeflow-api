@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserStatus } from '../users/user.entity';
 import { LoginDto, LoginResponseDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 import { JwtPayload } from './jwt.strategy';
 
 @Injectable()
@@ -13,6 +14,10 @@ export class AuthService {
     private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
+
+  async register(registerDto: RegisterDto): Promise<LoginResponseDto> {
+    throw new Error('Method not implemented.');
+  }
 
   async login(loginDto: LoginDto): Promise<LoginResponseDto> {
     const user = await this.userRepository.findOne({
