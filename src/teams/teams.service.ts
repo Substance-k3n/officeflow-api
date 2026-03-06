@@ -1,9 +1,9 @@
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Injectable, ForbiddenException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Team } from './team.entity';
 import { User, UserRole } from '../users/user.entity';
-import { TeamResponseDto, TeamMemberDto } from './dto/team.dto';
+import { TeamResponseDto, TeamMemberDto, CreateTeamDto } from './dto/team.dto';
 
 @Injectable()
 export class TeamsService {
@@ -13,6 +13,40 @@ export class TeamsService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
+
+  async create(createTeamDto: CreateTeamDto): Promise<TeamResponseDto> {
+    const { name, managerId } = createTeamDto;
+
+    const existingTeam = await this.teamRepository.findOne({ where: { name } });
+    if (existingTeam) {
+      throw new BadRequestException('Team with this name already exists');
+    }
+
+    const team = this.teamRepository.create({ name });
+
+    if (managerId) {
+      const manager = await this.userRepository.findOne({
+        where: { id: managerId },
+      });
+      if (!manager) {
+        throw new NotFoundException('Manager not found');
+      }
+      if (manager.role !== UserRole.MANAGER) {
+        throw new BadRequestException('The selected user is not a manager');
+      }
+      team.manager = manager;
+    }
+
+    await this.teamRepository.save(team);
+
+    return {
+      id: team.id,
+      name: team.name,
+      managerId: team.manager?.id,
+      managerName: team.manager?.name,
+      membersCount: 0,
+    };
+  }
 
   async findAll(): Promise<TeamResponseDto[]> {
     const teams = await this.teamRepository.find({

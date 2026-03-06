@@ -1,4 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+
+export class CreateTeamDto {
+  @ApiProperty({ description: 'The name of the team', example: 'Development' })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty({
+    description: 'The unique identifier of the team manager',
+    required: false,
+    example: 'manager-uuid',
+  })
+  @IsOptional()
+  @IsUUID()
+  managerId?: string;
+}
 
 export class TeamResponseDto {
   @ApiProperty({ description: 'The unique identifier of the team' })
