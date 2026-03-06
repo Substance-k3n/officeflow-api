@@ -42,13 +42,6 @@ import { LeaveRequest } from './leaves/leave-request.entity';
           entities: [User, Team, LeaveRequest],
           synchronize: configService.get('NODE_ENV') === 'development',
           logging: configService.get('NODE_ENV') === 'development',
-          ssl: {
-            rejectUnauthorized: false,
-          },
-          extra: {
-            max: 10,
-            ssl: { rejectUnauthorized: false },
-          },
         };
       },
       inject: [ConfigService],

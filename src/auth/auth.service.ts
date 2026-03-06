@@ -35,6 +35,7 @@ export class AuthService {
       password: hashedPassword,
       role,
       teamId,
+      status: UserStatus.ACTIVE,
     });
 
     await this.userRepository.save(user);
@@ -55,6 +56,7 @@ export class AuthService {
         email: user.email,
         role: user.role,
         teamId: user.teamId,
+        status: user.status,
       },
     };
   }
@@ -95,6 +97,8 @@ export class AuthService {
         email: user.email,
         role: user.role,
         teamId: user.teamId,
+        status: user.status,
+        teamName: user.team?.name,
       },
     };
   }

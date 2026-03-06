@@ -12,13 +12,13 @@ const options: any = {
   migrations: ['src/database/migrations/*.ts'],
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',
-  ssl: {
-    rejectUnauthorized: false,
-  },
 };
 
 if (process.env.DATABASE_URL) {
   options.url = process.env.DATABASE_URL;
+  options.ssl = {
+    rejectUnauthorized: false,
+  };
 } else {
   options.host = process.env.DB_HOST || 'localhost';
   options.port = parseInt(process.env.DB_PORT) || 5432;
