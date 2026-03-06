@@ -1,7 +1,7 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
-import { User, UserRole } from '../entities/user.entity';
+import { User, UserRole } from './user.entity';
 import { ListUsersQueryDto, UserResponseDto } from './dto/user.dto';
 
 @Injectable()

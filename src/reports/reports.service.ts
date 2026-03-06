@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LeaveRequest, LeaveStatus, LeaveType } from '../entities/leave-request.entity';
-import { User, UserRole } from '../entities/user.entity';
-import { Team } from '../entities/team.entity';
+import { LeaveRequest, LeaveStatus, LeaveType } from '../leaves/leave-request.entity';
+import { User, UserRole } from '../users/user.entity';
+import { Team } from '../teams/team.entity';
 import {
   ReportQueryDto,
   LeavesSummaryDto,

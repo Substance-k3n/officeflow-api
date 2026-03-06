@@ -6,9 +6,9 @@ import { UsersModule } from './users/users.module';
 import { TeamsModule } from './teams/teams.module';
 import { LeavesModule } from './leaves/leaves.module';
 import { ReportsModule } from './reports/reports.module';
-import { User } from './entities/user.entity';
-import { Team } from './entities/team.entity';
-import { LeaveRequest } from './entities/leave-request.entity';
+import { User } from './users/user.entity';
+import { Team } from './teams/team.entity';
+import { LeaveRequest } from './leaves/leave-request.entity';
 
 @Module({
   imports: [

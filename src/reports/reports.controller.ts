@@ -8,7 +8,7 @@ import {
   CalendarQueryDto,
   CalendarLeaveDto,
 } from './dto/reports.dto';
-import { User, UserRole } from '../entities/user.entity';
+import { User, UserRole } from '../users/user.entity';
 
 @Controller('reports')
 @UseGuards(JwtAuthGuard, RolesGuard)

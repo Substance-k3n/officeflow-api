@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
-import { LeaveRequest, LeaveStatus } from '../entities/leave-request.entity';
-import { User, UserRole } from '../entities/user.entity';
+import { LeaveRequest, LeaveStatus } from './leave-request.entity';
+import { User, UserRole } from '../users/user.entity';
 import {
   CreateLeaveDto,
   UpdateLeaveDto,

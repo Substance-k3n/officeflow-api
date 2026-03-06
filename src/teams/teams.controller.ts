@@ -3,7 +3,7 @@ import { JwtAuthGuard, RolesGuard } from '../common/guards';
 import { Roles, CurrentUser } from '../common/decorators';
 import { TeamsService } from './teams.service';
 import { TeamResponseDto, TeamMemberDto } from './dto/team.dto';
-import { User, UserRole } from '../entities/user.entity';
+import { User, UserRole } from '../users/user.entity';
 
 @Controller('teams')
 @UseGuards(JwtAuthGuard, RolesGuard)

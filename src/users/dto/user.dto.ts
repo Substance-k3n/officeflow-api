@@ -1,5 +1,5 @@
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
-import { UserRole, UserStatus } from '../../entities/user.entity';
+import { UserRole, UserStatus } from '../user.entity';
 
 export class UserResponseDto {
   id: string;

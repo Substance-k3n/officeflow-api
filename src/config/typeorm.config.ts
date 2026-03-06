@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
-import { User } from '../entities/user.entity';
-import { Team } from '../entities/team.entity';
-import { LeaveRequest } from '../entities/leave-request.entity';
+import { User } from '../users/user.entity';
+import { Team } from '../teams/team.entity';
+import { LeaveRequest } from '../leaves/leave-request.entity';
 
 config();
 

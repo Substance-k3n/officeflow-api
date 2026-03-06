@@ -1,8 +1,8 @@
 import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Team } from '../entities/team.entity';
-import { User, UserRole } from '../entities/user.entity';
+import { Team } from './team.entity';
+import { User, UserRole } from '../users/user.entity';
 import { TeamResponseDto, TeamMemberDto } from './dto/team.dto';
 
 @Injectable()
