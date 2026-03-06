@@ -1,5 +1,11 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiForbiddenResponse,
+} from '@nestjs/swagger';
 import { JwtAuthGuard, RolesGuard } from '../common/guards';
 import { Roles, CurrentUser } from '../common/decorators';
 import { ReportsService } from './reports.service';
@@ -22,6 +28,7 @@ export class ReportsController {
   @Roles(UserRole.HR, UserRole.MANAGER)
   @ApiOperation({ summary: 'Get summary of leave requests for HR/Managers' })
   @ApiOkResponse({ type: LeavesSummaryDto })
+  @ApiForbiddenResponse({ description: 'Forbidden if not Manager or HR' })
   async getLeavesSummary(
     @Query() query: ReportQueryDto,
     @CurrentUser() user: User,
