@@ -1,47 +1,47 @@
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserRole, UserStatus } from '../user.entity';
 
 export class UserResponseDto {
-  @ApiProperty()
+  @ApiProperty({ description: 'The unique identifier of the user' })
   id: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'The name of the user' })
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'The email address of the user', format: 'email' })
   email: string;
 
-  @ApiProperty({ enum: UserRole })
+  @ApiProperty({ description: 'The role of the user', enum: UserRole })
   role: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'The ID of the team the user belongs to' })
   teamId: string;
 
-  @ApiProperty({ enum: UserStatus })
+  @ApiProperty({ description: 'The status of the user', enum: UserStatus })
   status: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ description: 'The name of the team the user belongs to', required: false })
   teamName?: string;
 }
 
 export class ListUsersQueryDto {
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional({ description: 'Filter users by team ID' })
   @IsOptional()
   @IsString()
   teamId?: string;
 
-  @ApiProperty({ enum: UserRole, required: false })
+  @ApiPropertyOptional({ description: 'Filter users by role', enum: UserRole })
   @IsOptional()
   @IsEnum(UserRole)
   role?: UserRole;
 
-  @ApiProperty({ enum: UserStatus, required: false })
+  @ApiPropertyOptional({ description: 'Filter users by status', enum: UserStatus })
   @IsOptional()
   @IsEnum(UserStatus)
   status?: UserStatus;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional({ description: 'Search users by name or email' })
   @IsOptional()
   @IsString()
   search?: string;
