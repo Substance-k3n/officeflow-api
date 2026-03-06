@@ -1,9 +1,10 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User, UserStatus } from '../users/user.entity';
+import { Team } from '../teams/team.entity';
 import { LoginDto, LoginResponseDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtPayload } from './jwt.strategy';
@@ -13,6 +14,8 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(Team)
+    private teamRepository: Repository<Team>,
     private jwtService: JwtService,
   ) {}
 
@@ -25,6 +28,13 @@ export class AuthService {
 
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
+    }
+
+    if (teamId) {
+      const team = await this.teamRepository.findOne({ where: { id: teamId } });
+      if (!team) {
+        throw new BadRequestException('Team not found');
+      }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

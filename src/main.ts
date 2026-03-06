@@ -8,7 +8,9 @@ async function bootstrap() {
 
   // Enable CORS for frontend
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://localhost:3001'], // Vite and Next.js dev servers
+    origin: process.env.CORS_ORIGIN
+      ? process.env.CORS_ORIGIN.split(',')
+      : ['http://localhost:5173', 'http://localhost:3001'], // Vite and Next.js dev servers
     credentials: true,
   });
 

@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '../../users/user.entity';
 
@@ -25,6 +25,6 @@ export class RegisterDto {
 
   @ApiProperty({ example: 'team-uuid', required: false })
   @IsOptional()
-  @IsString()
+  @IsUUID()
   teamId?: string;
 }
