@@ -23,6 +23,9 @@ async function bootstrap() {
     }),
   );
 
+  // Set global prefix for all routes
+  app.setGlobalPrefix('api');
+
   // Swagger Setup
   const config = new DocumentBuilder()
     .setTitle('Team Tasks API')
@@ -31,12 +34,12 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api/docs', app, document);
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  console.log(`🚀 Application is running on: http://localhost:${port}`);
-  console.log(`📄 Swagger documentation is available at: http://localhost:${port}/api`);
+  console.log(`🚀 Application is running on: http://localhost:${port}/api`);
+  console.log(`📄 Swagger documentation is available at: http://localhost:${port}/api/docs`);
 }
 
 bootstrap();
