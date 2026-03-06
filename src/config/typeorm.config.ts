@@ -6,13 +6,8 @@ import { LeaveRequest } from '../leaves/leave-request.entity';
 
 config();
 
-export const AppDataSource = new DataSource({
+const options: any = {
   type: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT) || 5432,
-  username: process.env.DB_USERNAME || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
-  database: process.env.DB_DATABASE || 'officeflow',
   entities: [User, Team, LeaveRequest],
   migrations: ['src/database/migrations/*.ts'],
   synchronize: process.env.NODE_ENV === 'development',
@@ -20,4 +15,16 @@ export const AppDataSource = new DataSource({
   ssl: {
     rejectUnauthorized: false,
   },
-});
+};
+
+if (process.env.DATABASE_URL) {
+  options.url = process.env.DATABASE_URL;
+} else {
+  options.host = process.env.DB_HOST || 'localhost';
+  options.port = parseInt(process.env.DB_PORT) || 5432;
+  options.username = process.env.DB_USERNAME || 'postgres';
+  options.password = process.env.DB_PASSWORD || 'postgres';
+  options.database = process.env.DB_DATABASE || 'officeflow';
+}
+
+export const AppDataSource = new DataSource(options);

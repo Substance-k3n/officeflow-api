@@ -17,25 +17,40 @@ import { LeaveRequest } from './leaves/leave-request.entity';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: parseInt(configService.get('DB_PORT')),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE'),
-        entities: [User, Team, LeaveRequest],
-        synchronize: configService.get('NODE_ENV') === 'development',
-        logging: configService.get('NODE_ENV') === 'development',
-        ssl: {
-          rejectUnauthorized: false,
-        },
-        // Disable prepared statements for Supabase Transaction Pooler (port 6543)
-        extra: {
-          max: 10,
-          ssl: { rejectUnauthorized: false },
-        },
-      }),
+      useFactory: (configService: ConfigService) => {
+        const url = configService.get('DATABASE_URL');
+        if (url) {
+          return {
+            type: 'postgres',
+            url,
+            entities: [User, Team, LeaveRequest],
+            synchronize: true, // Auto-create tables (warning: data loss in prod if changes happen)
+            logging: true,
+            ssl: {
+              rejectUnauthorized: false,
+            },
+          };
+        }
+
+        return {
+          type: 'postgres',
+          host: configService.get('DB_HOST'),
+          port: parseInt(configService.get('DB_PORT')),
+          username: configService.get('DB_USERNAME'),
+          password: configService.get('DB_PASSWORD'),
+          database: configService.get('DB_DATABASE'),
+          entities: [User, Team, LeaveRequest],
+          synchronize: configService.get('NODE_ENV') === 'development',
+          logging: configService.get('NODE_ENV') === 'development',
+          ssl: {
+            rejectUnauthorized: false,
+          },
+          extra: {
+            max: 10,
+            ssl: { rejectUnauthorized: false },
+          },
+        };
+      },
       inject: [ConfigService],
     }),
     AuthModule,
