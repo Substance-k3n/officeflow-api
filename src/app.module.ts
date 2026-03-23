@@ -1,11 +1,16 @@
 import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TeamsModule } from './teams/teams.module';
 import { LeavesModule } from './leaves/leaves.module';
 import { ReportsModule } from './reports/reports.module';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { User } from './users/user.entity';
 import { Team } from './teams/team.entity';
 import { LeaveRequest } from './leaves/leave-request.entity';
@@ -14,6 +19,14 @@ import { LeaveRequest } from './leaves/leave-request.entity';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 100,
+        },
+      ],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -52,5 +65,19 @@ import { LeaveRequest } from './leaves/leave-request.entity';
     LeavesModule,
     ReportsModule,
   ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
