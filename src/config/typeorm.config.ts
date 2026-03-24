@@ -10,8 +10,8 @@ const options: any = {
   type: 'postgres',
   entities: [User, Team, LeaveRequest],
   migrations: ['src/database/migrations/*.ts'],
-  synchronize: process.env.NODE_ENV === 'development',
-  logging: process.env.NODE_ENV === 'development',
+  synchronize: false,
+  logging: process.env.NODE_ENV !== 'production',
 };
 
 if (process.env.DATABASE_URL) {
@@ -21,7 +21,7 @@ if (process.env.DATABASE_URL) {
   };
 } else {
   options.host = process.env.DB_HOST || 'localhost';
-  options.port = parseInt(process.env.DB_PORT) || 5432;
+  options.port = parseInt(process.env.DB_PORT || '5432', 10);
   options.username = process.env.DB_USERNAME || 'postgres';
   options.password = process.env.DB_PASSWORD || 'postgres';
   options.database = process.env.DB_DATABASE || 'officeflow';
