@@ -1,7 +1,7 @@
 {
-  "name": "team-tasks-backend",
+  "name": "officeflow-api",
   "version": "1.0.0",
-  "description": "Task management API for Team Tasks",
+  "description": "Backend API for OfficeFlow",
   "author": "",
   "private": true,
   "license": "MIT",

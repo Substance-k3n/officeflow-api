@@ -28,8 +28,8 @@ async function bootstrap() {
 
   // Swagger Setup
   const config = new DocumentBuilder()
-    .setTitle('Team Tasks API')
-    .setDescription('The Team Tasks API description')
+    .setTitle('OfficeFlow API')
+    .setDescription('OfficeFlow backend API documentation')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
