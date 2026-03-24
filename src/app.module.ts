@@ -31,30 +31,51 @@ import { LeaveRequest } from './leaves/leave-request.entity';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const url = configService.get('DATABASE_URL');
+        const nodeEnv = configService.get<string>('NODE_ENV') || 'development';
+        const isProd = nodeEnv === 'production';
+        const url = configService.get<string>('DATABASE_URL');
+
         if (url) {
           return {
             type: 'postgres',
             url,
             entities: [User, Team, LeaveRequest],
-            synchronize: true, // Auto-create tables (warning: data loss in prod if changes happen)
-            logging: true,
+            synchronize: false,
+            logging: !isProd,
             ssl: {
               rejectUnauthorized: false,
             },
+            retryAttempts: 5,
+            retryDelay: 3000,
           };
         }
 
+        const host = configService.get<string>('DB_HOST');
+        const portValue = configService.get<string>('DB_PORT');
+        const username = configService.get<string>('DB_USERNAME');
+        const password = configService.get<string>('DB_PASSWORD');
+        const database = configService.get<string>('DB_DATABASE');
+
+        if (!host || !username || !password || !database) {
+          throw new Error(
+            'Database configuration missing. Set DATABASE_URL or DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE.',
+          );
+        }
+
+        const parsedPort = parseInt(portValue || '5432', 10);
+
         return {
           type: 'postgres',
-          host: configService.get('DB_HOST'),
-          port: parseInt(configService.get('DB_PORT')),
-          username: configService.get('DB_USERNAME'),
-          password: configService.get('DB_PASSWORD'),
-          database: configService.get('DB_DATABASE'),
+          host,
+          port: Number.isNaN(parsedPort) ? 5432 : parsedPort,
+          username,
+          password,
+          database,
           entities: [User, Team, LeaveRequest],
-          synchronize: configService.get('NODE_ENV') === 'development',
-          logging: configService.get('NODE_ENV') === 'development',
+          synchronize: !isProd,
+          logging: !isProd,
+          retryAttempts: 5,
+          retryDelay: 3000,
         };
       },
       inject: [ConfigService],
